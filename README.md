@@ -13,7 +13,7 @@ Then logged in as this account, visit https://developer.wordpress.com/apps/ and 
 1. *Name*. Something like 'DataKind Stats Dashboard'
 2. *Description*. Not sure if necessary, but I'd just use 'DataKind Stats Dashboard' again if so.
 3. *Website URL*. Only for info, so `https://www.datakind.org/`?
-4. *Redirect URLs*. This is where the user is sent back to with the data needed to get an API key, after saying yes to allowing the app to access their blog. We'll be running a local script to receive this request later on, so put in `https://datakindauth.localtunnel.me/callback` for now. We'll see how to set this up later.
+4. *Redirect URLs*. This is where the user is sent back to with the data needed to get an API key, after saying yes to allowing the app to access their blog. We'll be running a local script to receive this request later on, so put in `http://datakindauth.localtunnel.me/callback` for now. We'll see how to set this up later.
 5. *Javascript Origin*. I don't think this matters for our usage. If it insists on something, put in `https://example.com`.
 6. *Type*. Select `Web`.
 
@@ -26,10 +26,10 @@ We'll run a small Python server/app, which is exposed to the public internet. Th
 With the client id and secret from above, run the python script:
 
 ```bash
-$ python auth_server.py --clientid=CLIENT_ID --clientsecret=CLIENT_SECRET
+$ python auth_server.py --clientid=CLIENT_ID --clientsecret=CLIENT_SECRET --publicurl http://datakindauth.localtunnel.me
 ```
 
-Install [localtunnel](https://localtunnel.github.io/www/) and in another terminal, use it to expose the python server to the public internet at `https://datakindauth.localtunnel.me`:
+Install [localtunnel](https://localtunnel.github.io/www/) and in another terminal, use it to expose the python server to the public internet at `http://datakindauth.localtunnel.me`:
 
 ```bash
 $ npx localtunnel --port 8976 --subdomain datakindauth
@@ -45,7 +45,7 @@ As part of the auth process, they will need to make sure they are logged into wo
 
 Unforunately, we don't have any options on our side to only request permissions for the stats, so it will need to be authorized against account that is limited. I'm a little unclear what options Wordpress provides here.
 
-You can now ask the client (Hannah) to visit `https://datakindauth.localtunnel.me/auth` to kick of the authentication process and get an API key that acts in the context of their account and our app. After this is done, the python process will print out the blog_id and API key. Save these somewhere secure, it's what we'll use to access the stats API.
+You can now ask the client (Hannah) to visit `http://datakindauth.localtunnel.me/auth` to kick of the authentication process and get an API key that acts in the context of their account and our app. After this is done, the python process will print out the blog_id and API key. Save these somewhere secure, it's what we'll use to access the stats API.
 
 ## Calling the API
 
